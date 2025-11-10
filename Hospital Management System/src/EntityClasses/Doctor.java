@@ -128,18 +128,18 @@ public class Doctor extends Person implements Displayable {
         System.out.println("Doctor Experience Years: " + experienceYears);
         System.out.println("Department ID: " + departmentId);
         System.out.println("Consultation Fee: " + consultationFee);
-        if(availableSlots.isEmpty()){
+        if (availableSlots.isEmpty()) {
             System.out.println("The Doctor hasn't any Available Slots");
         }
-        for (String ava:availableSlots){
-            System.out.println("The Doctor Available Slots is: "+"-"+ ava);
+        for (String ava : availableSlots) {
+            System.out.println("The Doctor Available Slots is: " + "-" + ava);
         }
 
-        if(assignedPatients.isEmpty()){
+        if (assignedPatients.isEmpty()) {
             System.out.println("The Doctor hasn't any Assigned Patients");
         }
-        for (String asa:assignedPatients){
-            System.out.println("The Doctor Assigned Patients is: "+"-"+ asa);
+        for (String asa : assignedPatients) {
+            System.out.println("The Doctor Assigned Patients is: " + "-" + asa);
         }
         System.out.println("---------------------------------------------------");
 

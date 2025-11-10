@@ -12,9 +12,10 @@ import Utils.InputHandler;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class InPatientService implements Manageable<InPatient>, Searchable {
-    private static final List<InPatient> inPatientList = new ArrayList<>();
+    public static List<InPatient> inPatientList = new ArrayList<>();
     public static PatientService patientService = new PatientService();
 
     @Override
@@ -86,5 +87,44 @@ public class InPatientService implements Manageable<InPatient>, Searchable {
     public void searchById() {
 
     }
+    public static void addSampleInPatients() {
+        DoctorService doctorService=new DoctorService();
+        List<Doctor> doctors = doctorService.getAll();
+        if(doctors.isEmpty()){
+            System.out.println("No Doctors available to assign!");
+            return;
+        }
+        for (int i = 1; i < 3; i++) {
+            InPatient inPatient = new InPatient();
+            inPatient.setId(HelperUtils.generateId("PER", 8));
+            inPatient.setPatientId(HelperUtils.generateId("PAT", 8));
+            inPatient.setFirstName("InPatient" + i);
+            inPatient.setLastName("Ward" + i);
+            inPatient.setEmail("inpatient" + i + "@mail.com");
+            inPatient.setPhoneNumber("9911" + i);
+            inPatient.setAddress("Ward Address " + i);
+            inPatient.setBloodGroup(i % 2 == 0 ? "B+" : "AB-");
+            inPatient.setDateOfBirth(LocalDate.of(1985 + i, 2, i));
+            inPatient.setGender(i % 2 == 0 ? Gender.MALE : Gender.FEMALE);
+            inPatient.setEmergencyContact("9888" + i);
+            inPatient.setInsuranceId("INSIN" + i);
+            List<String> allergies = new ArrayList<>();
+            if (i % 2 == 0) allergies.add("Pollen");
+            if (i % 3 == 0) allergies.add("Gluten");
+            inPatient.setAllergies(allergies);
+            inPatient.setAdmissionDate(LocalDate.now().minusDays(i));
+            inPatient.setDischargeDate(LocalDate.now().plusDays(i * 2));
+            inPatient.setRoomNumber("R" + i);
+            inPatient.setBedNumber("B" + i);
 
+            int doctorIndex = new Random().nextInt(doctors.size());
+            inPatient.setAdmittingDoctorId(doctors.get(doctorIndex).getDoctorId());
+
+            inPatient.setDailyCharges(250.0 + (i * 50));
+
+            inPatient.setRegistrationDate(LocalDate.now());
+
+            patientService.save(inPatient);
+        }
+    }
 }

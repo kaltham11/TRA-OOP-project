@@ -1,6 +1,7 @@
 package ServiceClasses;
 
 import EntityClasses.Appointment;
+import EntityClasses.Doctor;
 import EntityClasses.MedicalRecord;
 import EntityClasses.Patient;
 import InterfaceClasses.Editable;
@@ -12,9 +13,10 @@ import Utils.InputHandler;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MedicalRecordService implements Manageable<MedicalRecord>, Searchable, Editable<MedicalRecord> {
-    private static final List<MedicalRecord> medicalRecordList = new ArrayList<>();
+    public static List<MedicalRecord> medicalRecordList = new ArrayList<>();
 
 
     @Override
@@ -309,6 +311,38 @@ public class MedicalRecordService implements Manageable<MedicalRecord>, Searchab
             }
         }
         return false;
+    }
+    public static void addSampleMedicalRecords() {
+        PatientService patientService=new PatientService();
+        DoctorService doctorService=new DoctorService();
+        List<Patient> patients = patientService.getAll();
+        List<Doctor> doctors = doctorService.getAll();
+
+        if (patients.isEmpty() || doctors.isEmpty()) {
+            System.out.println("No patients or doctors available to create sample medical records.");
+            return;
+        }
+
+        for (int i = 1; i <= 5; i++) {
+            MedicalRecord record = new MedicalRecord();
+            record.setRecordId(HelperUtils.generateId("REC", 8));
+
+            int patientIndex = new Random().nextInt(patients.size());
+            Patient selectedPatient=patients.get(patientIndex);
+            record.setPatientId(selectedPatient.getPatientId());
+
+            int doctorIndex = new Random().nextInt(doctors.size());
+            record.setDoctorId(doctors.get(doctorIndex).getDoctorId());
+
+            record.setVisitDate(LocalDate.now().minusDays(i));
+            record.setDiagnosis("Diagnosis " + i);
+            record.setPrescription("Prescription " + i);
+            record.setTestResults("Test Results " + i);
+            record.setNotes("No additional notes for record " + i);
+
+            medicalRecordList.add(record);
+            selectedPatient.addMedicalRecord(record);
+        }
     }
 
 

@@ -1,5 +1,6 @@
 package ServiceClasses;
 
+import EntityClasses.Doctor;
 import EntityClasses.EmergencyPatient;
 import EntityClasses.Gender;
 import EntityClasses.OutPatient;
@@ -11,9 +12,10 @@ import Utils.InputHandler;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class OutPatientService implements Manageable<OutPatient>, Searchable {
-    private static final List<OutPatient> outPatientList = new ArrayList<>();
+    public static List<OutPatient> outPatientList = new ArrayList<>();
     public static PatientService patientService = new PatientService();
 
     @Override
@@ -83,4 +85,39 @@ public class OutPatientService implements Manageable<OutPatient>, Searchable {
     public void searchById() {
 
     }
+
+    public static void addSampleOutPatients() {
+        DoctorService doctorService=new DoctorService();
+        List<Doctor> doctors=doctorService.getAll();
+        for (int i = 1; i < 3; i++) {
+            OutPatient outPatient = new OutPatient();
+            outPatient.setId(HelperUtils.generateId("PER", 8));
+            outPatient.setPatientId(HelperUtils.generateId("PAT", 8));
+            outPatient.setFirstName("OutPatient" + i);
+            outPatient.setLastName("Clinic" + i);
+            outPatient.setEmail("outpatient" + i + "@mail.com");
+            outPatient.setPhoneNumber("9922" + i);
+            outPatient.setAddress("Clinic Address " + i);
+            outPatient.setBloodGroup(i % 2 == 0 ? "A-" : "B+");
+            outPatient.setDateOfBirth(LocalDate.of(1992 + i, 3, i));
+            outPatient.setGender(i % 2 == 0 ? Gender.MALE : Gender.FEMALE);
+            outPatient.setEmergencyContact("9777" + i);
+            outPatient.setInsuranceId("INSOUT" + i);
+            List<String> allergies = new ArrayList<>();
+            if (i % 2 == 0) allergies.add("Dust");
+            if (i % 3 == 0) allergies.add("Seafood");
+            outPatient.setAllergies(allergies);
+            outPatient.setVisitCount(i * 2);
+            outPatient.setLastVisitDate(LocalDate.now().minusDays(i * 10));
+            int doctorIndex = new Random().nextInt(doctors.size());
+            outPatient.setPreferredDoctorId(doctors.get(doctorIndex).getDoctorId());
+
+            outPatient.setNextVisitDate(LocalDate.now().plusDays(i * 15));
+
+            outPatient.setRegistrationDate(LocalDate.now());
+
+            patientService.save(outPatient);
+        }
+    }
+
 }

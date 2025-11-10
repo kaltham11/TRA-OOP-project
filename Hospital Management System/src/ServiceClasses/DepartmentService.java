@@ -13,9 +13,10 @@ import Utils.InputHandler;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 public class DepartmentService implements Manageable<Department>, Searchable, Editable<Department> {
-    private static final List<Department> departmentList = new ArrayList<>();
+    public static  List<Department> departmentList = new ArrayList<>();
 
     @Override
     public Department add() {
@@ -393,4 +394,31 @@ public class DepartmentService implements Manageable<Department>, Searchable, Ed
         }
         return false;
     }
+
+    public static void addSampleDepartments() {
+        DoctorService doctorService=new DoctorService();
+        List<Doctor> doctors= doctorService.getAll();
+
+        for (int i = 1; i <= 5; i++) {
+            Department dept = new Department();
+            dept.setDepartmentId(HelperUtils.generateId("DEP", 6));
+            dept.setDepartmentName("Department " + i);
+
+            if (!doctors.isEmpty()) {
+                int randomIndex = new Random().nextInt(doctors.size());
+                dept.setHeadDoctorId(doctors.get(randomIndex).getDoctorId());
+            } else {
+                dept.setHeadDoctorId("NONE");
+            }
+
+            int bedCapacity = 50 + i * 10;
+            dept.setBedCapacity(bedCapacity);
+
+            int availableBeds = bedCapacity - (i * 5);
+            dept.setAvailableBeds(Math.max(0, availableBeds));
+            departmentList.add(dept);
+
+        }
+    }
+
 }

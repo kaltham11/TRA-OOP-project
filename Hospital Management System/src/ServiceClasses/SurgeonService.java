@@ -1,5 +1,7 @@
 package ServiceClasses;
 
+import EntityClasses.Department;
+import EntityClasses.Patient;
 import EntityClasses.Surgeon;
 import EntityClasses.Gender;
 import InterfaceClasses.Manageable;
@@ -7,8 +9,10 @@ import InterfaceClasses.Searchable;
 import Utils.HelperUtils;
 import Utils.InputHandler;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class SurgeonService implements Manageable<Surgeon>, Searchable {
     public static DoctorService doctorService = new DoctorService();
@@ -97,4 +101,48 @@ public class SurgeonService implements Manageable<Surgeon>, Searchable {
     public void searchById() {
 
     }
+
+    public static void addSampleSurgeons() {
+
+        for (int i = 1; i <= 3; i++) {
+            Surgeon surgeon = new Surgeon();
+            surgeon.setId(HelperUtils.generateId("PER", 8));
+            surgeon.setDoctorId(HelperUtils.generateId("SUR", 8));
+            surgeon.setFirstName("Surgeon" + i);
+            surgeon.setLastName("Doctor" + i);
+            surgeon.setEmail("surgeon" + i + "@hospital.com");
+            surgeon.setPhoneNumber("9555" + i);
+            surgeon.setAddress("Surgeon Address " + i);
+            surgeon.setDateOfBirth(LocalDate.of(1975 + i, 4, i));
+            surgeon.setGender(i % 2 == 0 ? Gender.MALE : Gender.FEMALE);
+            surgeon.setSpecialization("Surgery");
+            surgeon.setQualification("MD Surgery");
+            surgeon.setExperienceYears(10 + i);
+            surgeon.setConsultationFee(200 + i * 50);
+
+
+
+            List<String> availableSlots = new ArrayList<>();
+            availableSlots.add("Monday 9AM");
+            availableSlots.add("Wednesday 11AM");
+            availableSlots.add("Friday 2PM");
+            if (i % 2 == 0) availableSlots.add("Thursday 3PM");
+            surgeon.setAvailableSlots(availableSlots);
+
+            surgeon.setSurgeriesPerformed(50 + i * 10);
+
+            List<String> surgeryTypes = new ArrayList<>();
+            surgeryTypes.add("Appendectomy");
+            surgeryTypes.add("Gallbladder Surgery");
+            if (i % 2 == 0) surgeryTypes.add("Hernia Repair");
+            surgeon.setSurgeryTypes(surgeryTypes);
+
+            surgeon.setOperationTheatreAccess(i % 2 == 0);
+
+            doctorService.save(surgeon);
+
+
+        }
+    }
+
 }

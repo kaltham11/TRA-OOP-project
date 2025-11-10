@@ -1,9 +1,6 @@
 package ServiceClasses;
 
-import EntityClasses.ArrivalMode;
-import EntityClasses.EmergencyPatient;
-import EntityClasses.Gender;
-import EntityClasses.OutPatient;
+import EntityClasses.*;
 import InterfaceClasses.Manageable;
 import InterfaceClasses.Searchable;
 import Utils.HelperUtils;
@@ -12,10 +9,11 @@ import Utils.InputHandler;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class EmergencyPatientService implements Manageable<EmergencyPatient>, Searchable {
 
-        private static final List<EmergencyPatient> emergencyPatientList = new ArrayList<>();
+        public static List<EmergencyPatient> emergencyPatientList = new ArrayList<>();
         public static PatientService patientService = new PatientService();
 
         @Override
@@ -99,6 +97,54 @@ public class EmergencyPatientService implements Manageable<EmergencyPatient>, Se
         public void searchById() {
 
         }
+
+    public static void addSampleEmergencyPatients() {
+            DoctorService doctorService=new DoctorService();
+            List<Doctor> doctors=doctorService.getAll();
+
+            if(doctors.isEmpty()){
+                System.out.println("No Doctors available to assign!");
+                return;
+            }
+        for (int i = 1; i < 3; i++) {
+            EmergencyPatient emergencyPatient = new EmergencyPatient();
+            emergencyPatient.setId(HelperUtils.generateId("PER", 8));
+            emergencyPatient.setPatientId(HelperUtils.generateId("PAT", 8));
+            emergencyPatient.setFirstName("Emergency" + i);
+            emergencyPatient.setLastName("Patient" + i);
+            emergencyPatient.setEmail("emergency" + i + "@mail.com");
+            emergencyPatient.setPhoneNumber("9933" + i);
+            emergencyPatient.setAddress("ER Address " + i);
+            emergencyPatient.setBloodGroup(i % 2 == 0 ? "AB+" : "O-");
+            emergencyPatient.setDateOfBirth(LocalDate.of(1995 + i, 2, i));
+            emergencyPatient.setGender(i % 2 == 0 ? Gender.MALE : Gender.FEMALE);
+            emergencyPatient.setEmergencyContact("9888" + i);
+            emergencyPatient.setInsuranceId("INSER" + i);
+
+            List<String> allergies = new ArrayList<>();
+            if (i % 2 == 0) allergies.add("Latex");
+            if (i % 3 == 0) allergies.add("Seafood");
+            emergencyPatient.setAllergies(allergies);
+
+            emergencyPatient.setAdmissionDate(LocalDate.now().minusDays(i));
+            emergencyPatient.setDischargeDate(LocalDate.now().plusDays(i));
+            emergencyPatient.setRoomNumber("ER-Room-" + i);
+            emergencyPatient.setBedNumber("ER-Bed-" + i);
+            int doctorIndex = new Random().nextInt(doctors.size());
+            emergencyPatient.setAdmittingDoctorId(doctors.get(doctorIndex).getDoctorId());
+
+            emergencyPatient.setDailyCharges(500.0 + i * 50);
+
+            emergencyPatient.setEmergencyType(i % 2 == 0 ? "Heart Attack" : "Accident");
+            emergencyPatient.setArrivalMode(i % 2 == 0 ? ArrivalMode.AMBULANCE : ArrivalMode.WALK_IN);
+            emergencyPatient.setTriageLevel(1 + i % 5);
+            emergencyPatient.setAdmittedViaER(i % 2 == 0);
+
+            emergencyPatient.setRegistrationDate(LocalDate.now());
+
+            patientService.save(emergencyPatient);
+        }
+    }
 
 
 }

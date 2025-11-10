@@ -1,15 +1,11 @@
 package EntityClasses;
 
 import InterfaceClasses.Displayable;
-import ServiceClasses.AppointmentService;
-import ServiceClasses.MedicalRecordService;
 import Utils.HelperUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static Main.MainApplication.patient;
 
 
 public class Patient extends Person implements Displayable {

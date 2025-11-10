@@ -1,6 +1,7 @@
 package ServiceClasses;
 
 import EntityClasses.Appointment;
+import EntityClasses.Doctor;
 import EntityClasses.Patient;
 import EntityClasses.Status;
 import InterfaceClasses.Appointable;
@@ -14,9 +15,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 public class AppointmentService implements Manageable<Appointment>, Searchable, Editable<Appointment>, Appointable {
-    private static final List<Appointment> appointmentList = new ArrayList<>();
+    public static  List<Appointment> appointmentList = new ArrayList<>();
 
     @Override
     public Appointment add() {
@@ -571,4 +573,39 @@ public void  displayAppointments(String doctorId, LocalDate startDate, LocalDate
         System.out.println("No Appointments found for this Doctor in the specified date range");
     }
 }
+
+    public static void sampleDataAppointment() {
+        PatientService patientService = new PatientService();
+        DoctorService doctorService = new DoctorService();
+        List<Patient> patients = patientService.getAll();
+        List<Doctor> doctors = doctorService.getAll();
+
+        if (patients.isEmpty() || doctors.isEmpty()) {
+            System.out.println("No patients or doctors available to create sample appointments.");
+            return;
+        }
+
+        for (int i = 1; i <= 5; i++) {
+            Appointment appointment = new Appointment();
+            appointment.setAppointmentId(HelperUtils.generateId("APP", 8));
+
+            int patientIndex = new Random().nextInt(patients.size());
+            Patient selectedPatient = patients.get(patientIndex);
+            appointment.setPatientId(selectedPatient.getPatientId());
+
+            int doctorIndex = new Random().nextInt(doctors.size());
+            appointment.setDoctorId(doctors.get(doctorIndex).getDoctorId());
+
+            appointment.setAppointmentDate(LocalDate.now().plusDays(i));
+            appointment.setAppointmentTime((9 + i) + ":00 AM");
+            appointment.setReason("General Checkup " + i);
+            appointment.setNotes("No additional notes");
+            appointment.setStatus(Status.SCHEDULED);
+
+            appointmentList.add(appointment);
+            selectedPatient.addAppointment(appointment);
+
+        }
+    }
+
 }

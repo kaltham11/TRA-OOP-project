@@ -93,7 +93,7 @@ public class Nurse extends Person implements Displayable {
             System.out.println("The Nurse hasn't any Assigned Patients");
         }
         for (String asa : assignedPatients) {
-            System.out.println("The Nurse Assigned Patients is: " + "-" + asa);
+            System.out.println("Patient Assigned to Nurse is: " + "-" + asa);
         }
         System.out.println("-----------------------------------------------------");
     }

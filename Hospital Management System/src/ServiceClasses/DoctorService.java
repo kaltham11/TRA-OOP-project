@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DoctorService implements Manageable<Doctor>, Searchable, Editable<Doctor> {
-    private static final List<Doctor> doctorList =new ArrayList<>();
+    public static List<Doctor> doctorList =new ArrayList<>();
     @Override
     public Doctor add() {
         Doctor doctor=new Doctor();

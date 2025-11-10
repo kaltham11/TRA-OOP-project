@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NurseService implements Manageable<Nurse>, Searchable, Editable<Nurse> {
-    private static final List<Nurse> nurseList = new ArrayList<>();
+    public static  List<Nurse> nurseList = new ArrayList<>();
 
     @Override
     public Nurse add() {
@@ -391,6 +391,28 @@ public class NurseService implements Manageable<Nurse>, Searchable, Editable<Nur
         }
         return null;
     }
+    public static void sampleDataNurse() {
+        for (int i = 1; i <= 5; i++) {
+            Nurse nurse = new Nurse();
+            nurse.setId(HelperUtils.generateId("PER", 8));
+            nurse.setNurseId(HelperUtils.generateId("NUR", 8));
+            nurse.setFirstName("Nurse" + i);
+            nurse.setLastName("Staff" + i);
+            nurse.setEmail("nurse" + i + "@hospital.com");
+            nurse.setPhoneNumber("9666" + i);
+            nurse.setAddress("Nurse Address " + i);
+            nurse.setDateOfBirth(LocalDate.of(1985 + i, i, 10));
+            nurse.setGender(i % 2 == 0 ? Gender.FEMALE : Gender.MALE);
+            if (i % 3 == 0) nurse.setShift(Shift.NIGHT);
+            else if (i % 2 == 0) nurse.setShift(Shift.EVENING);
+            else nurse.setShift(Shift.MORNING);
+
+            nurse.setQualification("BSc Nursing " + i);
+
+            nurseList.add(nurse);
+        }
+    }
+
 
 
 }

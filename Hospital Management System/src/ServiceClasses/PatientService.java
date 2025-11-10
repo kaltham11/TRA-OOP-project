@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PatientService implements Manageable<Patient>, Searchable, Editable<Patient> {
-    private static final List<Patient> patientList =new ArrayList<>();
+    public static List<Patient> patientList =new ArrayList<>();
 
 
     @Override
@@ -484,4 +484,31 @@ public void displayPatients(){
          }
      }
  }
+
+    public static void addSamplePatients() {
+
+        for (int i = 1; i <= 4; i++) {
+            Patient patient = new Patient();
+            patient.setId(HelperUtils.generateId("PER", 8));
+            patient.setPatientId(HelperUtils.generateId("PAT", 8));
+            patient.setFirstName("Patient" + i);
+            patient.setLastName("Regular" + i);
+            patient.setEmail("patient" + i + "@mail.com");
+            patient.setPhoneNumber("9900" + i);
+            patient.setAddress("Address " + i);
+            patient.setBloodGroup(i % 2 == 0 ? "A+" : "O-");
+            patient.setDateOfBirth(LocalDate.of(1990 + i, 1, i));
+            patient.setGender(i % 2 == 0 ? Gender.MALE : Gender.FEMALE);
+            patient.setEmergencyContact("9999" + i);
+            patient.setInsuranceId("INS" + i);
+            List<String> allergies = new ArrayList<>();
+            if (i % 2 == 0) allergies.add("Peanuts");
+            if (i % 3 == 0) allergies.add("Dust");
+            patient.setAllergies(allergies);
+            patient.setRegistrationDate(LocalDate.now());
+
+
+            patientList.add(patient);
+        }
+    }
 }

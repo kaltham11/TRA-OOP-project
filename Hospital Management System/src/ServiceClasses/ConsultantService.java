@@ -8,6 +8,7 @@ import InterfaceClasses.Searchable;
 import Utils.HelperUtils;
 import Utils.InputHandler;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class ConsultantService implements Manageable<Consultant>, Searchable {
         consultant.setConsultationFee(InputHandler.getDoubleInput("Enter Consultation Fee for Consultant"));
 
         List<String> availableSlots = new ArrayList<>();
-        System.out.println("Enter available slots for Consultant (type 'q' when finished):");
+        System.out.println("Please, Enter available slots like (Monday 10AM, or Wednesday 3PM)(type 'q' when finished)");
         while (flag) {
             String slot = InputHandler.getStringInput("Enter available slot: ");
             if (slot.equalsIgnoreCase("q")) {
@@ -96,4 +97,36 @@ public class ConsultantService implements Manageable<Consultant>, Searchable {
     public void searchById() {
 
     }
+
+    public static void addSampleConsultants() {
+        for (int i = 1; i <= 3; i++) {
+            Consultant consultant = new Consultant();
+            consultant.setId(HelperUtils.generateId("PER", 8));
+            consultant.setDoctorId(HelperUtils.generateId("CON", 8));
+            consultant.setFirstName("Consultant" + i);
+            consultant.setLastName("Doctor" + i);
+            consultant.setEmail("consultant" + i + "@hospital.com");
+            consultant.setPhoneNumber("9777" + i);
+            consultant.setAddress("Address " + i);
+            consultant.setDateOfBirth(LocalDate.of(1980 + i, 5, i));
+            consultant.setGender(i % 2 == 0 ? Gender.MALE : Gender.FEMALE);
+            consultant.setSpecialization(i % 2 == 0 ? "Cardiology" : "Neurology");
+            consultant.setQualification("MD");
+            consultant.setExperienceYears(5 + i);
+            consultant.setConsultationFee(100 + i * 20);
+            List<String> availableSlots = new ArrayList<>();
+            availableSlots.add("Monday 10AM");
+            availableSlots.add("Wednesday 3PM");
+            if (i % 2 == 0) availableSlots.add("Thursday 11AM");
+            consultant.setAvailableSlots(availableSlots);
+            List<String> consultationTypes = new ArrayList<>();
+            consultationTypes.add("Initial");
+            consultationTypes.add("Follow-up");
+            consultant.setConsultationTypes(consultationTypes);
+            consultant.setOnlineConsultationAvailable(i % 2 == 0);
+            consultant.setConsultationDuration(30 + i * 5);
+            doctorService.save(consultant);
+        }
+    }
+
 }

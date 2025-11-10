@@ -8,6 +8,7 @@ import InterfaceClasses.Searchable;
 import Utils.HelperUtils;
 import Utils.InputHandler;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,5 +83,38 @@ public class GeneralPractitionerService implements Manageable<GeneralPractitione
     public void searchById() {
 
     }
+
+    public static void addSampleGeneralPractitioners() {
+        for (int i = 1; i <= 2; i++) {
+            GeneralPractitioner gp = new GeneralPractitioner();
+            gp.setId(HelperUtils.generateId("PER", 8));
+            gp.setDoctorId(HelperUtils.generateId("GP", 8));
+            gp.setFirstName("GP" + i);
+            gp.setLastName("Doctor" + i);
+            gp.setEmail("gp" + i + "@hospital.com");
+            gp.setPhoneNumber("9666" + i);
+            gp.setAddress("GP Address " + i);
+            gp.setDateOfBirth(LocalDate.of(1985 + i, 3, i));
+            gp.setGender(i % 2 == 0 ? Gender.MALE : Gender.FEMALE);
+            gp.setSpecialization("General Medicine");
+            gp.setQualification("MBBS");
+            gp.setExperienceYears(3 + i);
+            gp.setConsultationFee(50 + i * 10);
+
+            List<String> availableSlots = new ArrayList<>();
+            availableSlots.add("Monday 10AM");
+            availableSlots.add("Tuesday 2PM");
+            availableSlots.add("Thursday 11AM");
+            if (i % 2 == 0) availableSlots.add("Friday 3PM");
+            gp.setAvailableSlots(availableSlots);
+
+            gp.setWalkingAvailable(i % 2 == 0);
+            gp.setHomeVisitAvailable(i % 3 == 0);
+            gp.setVaccinationCertified(true);
+
+            doctorService.save(gp);
+        }
+    }
+
 }
 
